@@ -14,7 +14,7 @@
 
 - react-router-dom
 
-- react-toastify(farklı bir library bakılacak)
+- react-toastify
 
 - react-icons
 
