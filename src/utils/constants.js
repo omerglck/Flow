@@ -1,0 +1,16 @@
+export const categories = [
+  { id: "1", title: "Genel Tartışma", color: "#FF5733" },
+  { id: "2", title: "Teknoloji", color: "#3399FF" },
+  { id: "3", title: "Eğitim ve Akademik Konular", color: "#33FF57" },
+  { id: "4", title: "Hobi ve İlgi Alanları", color: "#FF33FF" },
+  { id: "5", title: "Sağlık ve İyilik Hali", color: "#33FFFF" },
+  { id: "6", title: "İş ve Kariyer", color: "#FFFF33" },
+  { id: "7", title: "Eğlence ve Kültür", color: "#FF3366" },
+  { id: "8", title: "Moda ve Güzellik", color: "#3366FF" },
+  { id: "9", title: "Aile ve İlişkiler", color: "#6633FF" },
+  { id: "10", title: "Teknoloji ve Bilim", color: "#663333" },
+  { id: "11", title: "Spor ve Rekabet", color: "#FF6633" },
+  { id: "12", title: "Ev ve Bahçe", color: "#33FF99" },
+  { id: "13", title: "Seyahat ve Gezi", color: "#9933FF" },
+  { id: "14", title: "Politika ve Toplum", color: "#33FFCC" },
+];

@@ -1,18 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import InputArea from "../components/InputArea";
-import { saveToLocal, validate } from "../utils/helpers";
+import { validate } from "../utils/helpers";
 import { toast } from "react-toastify";
 import { v4 as id } from "uuid";
-import { useState } from "react";
-import axios from "axios";
-
-axios.defaults.baseURL = "http://localhost:3090";
-
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 const RegisterPage = () => {
-  const [img, setImg] = useState();
   const navigate = useNavigate();
+  const { uploadUser } = useContext(UserContext);
+
+  if (localStorage.getItem("token")) {
+    navigate("/home");
+  }
   // formu gönderme
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // form verisi oluşturma
     const form = new FormData(e.target);
@@ -20,7 +22,9 @@ const RegisterPage = () => {
     const formData = Object.fromEntries(form.entries());
 
     // resmi stringe çevirme
-    const strImg = imageToString(formData.image);
+    const strImg = await imageToString(formData.image);
+
+    // console.log(strImg);
     //! FORM KONTROL ETME
     if (validate(formData) && strImg) {
       // kullanıcıya benzersiz id verme
@@ -30,6 +34,7 @@ const RegisterPage = () => {
 
       // kullanıcıyı veri tabanına ekleme
       uploadUser(formData);
+      console.log(uploadUser(formData));
     } else {
       toast.info("Lütfen form alanını doldurunuz", {
         position: "top-right",
@@ -42,24 +47,32 @@ const RegisterPage = () => {
         theme: "dark",
       });
     }
-    console.log(formData);
+    // console.log(formData);
   };
   // resmi stringe çevirir
-  const imageToString = (file) => {
+  const imageToString = async (file) => {
     // dosya tipini doğrulama
     if (file.type === "image/jpeg" || file.type === "image/png") {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        // filereader class'ının resmi stringe çevirmesine yarayan komut
+
         reader.readAsDataURL(file);
-        // resmi stringe çevirme olayı hemen olmuyor arka planda bir işlem yapıyor
-        // bu işlemi izliyor
+
         reader.onload = () => {
-          // işlem bitiğinde state'e aktarıyor
-          setImg(reader.result);
+          resolve(reader.result);
         };
+
         reader.onerror = () => {
-          toast("resmi yüklemeh hatası");
+          toast.error("Resim yüklenirken hata oluştu, tekrar deneyiniz", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
           reject(null);
         };
       });
@@ -78,29 +91,6 @@ const RegisterPage = () => {
     }
   };
 
-  // kullanıcıyı veri tabanına ekler
-  const uploadUser = (user) => {
-    axios
-      .post("/users", user)
-      .then((res) => {
-        //kullanıcının id'sini localstorage ekle
-        saveToLocal("token", user.id);
-        // anasayfaya yönlendir
-        navigate("/home");
-        // bildirim verme
-        toast.success("Hesabınız başarıyla oluşturuldu", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      })
-      .then((err) => console.log(err));
-  };
   return (
     <section className="bg-gray-900 ">
       <div className="h-screen flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">

@@ -5,7 +5,9 @@ export const validate = (data) => {
   // hepsi dolu ise  true dönderir.
   //! some: Bir dizi içinde en az bir elemanın belirli bir koşulu sağlayıp sağlamadığını kontrol eder
   //! every: Bir dizide ki tüm elemanların belirli bir koşulu sağlayıp sağlamadığını kontrol eder.
-  const isValid = !Object.values(data).some((i) => i === null || i === "");
+  const isValid = !Object.values(data).some(
+    (i) => i === null || i === "" || i === undefined
+  );
 
   return isValid;
 };

@@ -1,9 +1,37 @@
 import { Link } from "react-router-dom";
 import InputArea from "../components/InputArea";
-
+import { validate } from "./../utils/helpers";
+import { toast } from "react-toastify";
+import { useContext } from "react";
+import { UserContext } from "./../context/UserContext";
+import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
+  const navigate = useNavigate();
+
+  const { loginToAccount } = useContext(UserContext);
+
+  if (localStorage.getItem("token")) {
+    navigate("/home");
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+    if (validate({ email, password })) {
+      loginToAccount(email, password);
+    } else {
+      toast.info("Formu Doldurunuz...", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
   };
   return (
     <section className="bg-gray-900 ">
